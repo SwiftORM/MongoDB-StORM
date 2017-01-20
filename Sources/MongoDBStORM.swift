@@ -10,7 +10,9 @@ import StORM
 import MongoDB
 import PerfectLogger
 import Foundation
-
+#if os(Linux)
+import LinuxBridge
+#endif
 /// MongoDBConnection sets the connection parameters for the MongoDB Server access
 /// Usage: 
 /// MongoDBConnection.host = "XXXXXX"
