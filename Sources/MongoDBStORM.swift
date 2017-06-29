@@ -124,7 +124,6 @@ open class MongoDBStORM: StORM, StORMProtocol {
 	/// Designed as "open" so it can be overriden and customized.
 	/// If an ID has been defined, save() will perform an update, otherwise a new document is created.
 	/// On error can throw a StORMError error.
-	@discardableResult
 	open func save() throws {
 		do {
 			let (collection, client) = try setupCollection()
@@ -147,7 +146,6 @@ open class MongoDBStORM: StORM, StORMProtocol {
 	/// Collection Creation
 	/// This Setup is empty because MongoDB will create the collection automatically when you first try to store data with it
 	/// Override this to create your own with c=validation rules etc, as needed.
-	@discardableResult
 	open func setup() throws {}
 
 	public func close(_ collection: MongoCollection, _ client: MongoClient) {
