@@ -81,20 +81,7 @@ extension MongoDBStORM {
 	public func find(_ data: [String: Any], cursor: StORMCursor = StORMCursor()) throws {
 		do {
 			let (collection, client) = try setupCollection()
-			let findObject = BSON()
-			for (key, val) in data {
-				if val is Int {
-					findObject.append(key: key, int: val as! Int)
-				} else if val is Double {
-					findObject.append(key: key, double: val as! Double)
-				} else if val is Bool {
-					findObject.append(key: key, bool: val as! Bool)
-				} else if val is [Int8] {
-					findObject.append(key: key, bytes: val as! [UInt8])
-				} else {
-					findObject.append(key: key, string: "\(val)")
-				}
-			}
+			let findObject = BSON(map: data)
 			do {
 				let response = collection.find(
 					query: findObject,
