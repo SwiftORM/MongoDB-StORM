@@ -7,7 +7,7 @@
 //
 
 import StORM
-import MongoDB
+import PerfectMongoDB
 import PerfectLogger
 import Foundation
 #if os(Linux)

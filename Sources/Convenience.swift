@@ -7,7 +7,7 @@
 //
 
 import StORM
-import MongoDB
+import PerfectMongoDB
 import PerfectLogger
 
 /// Convenience methods extending the main CouchDBStORM class.
