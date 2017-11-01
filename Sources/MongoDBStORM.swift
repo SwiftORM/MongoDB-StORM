@@ -130,7 +130,14 @@ open class MongoDBStORM: StORM, StORMProtocol {
 			let bson = try BSON(json: try asDataDict(1).jsonEncodedString())
 			if !keyIsEmpty() {
 				let (_, idval) = firstAsKey()
-				bson.append(key: "_id", string: "\(idval)")
+                
+                let id = "\(idval)"
+                if BSON.OID.isValidObjectId(id) {
+                    let oid = BSON.OID(id)
+                    bson.append(oid: oid)
+                } else {
+                    bson.append(key: "_id", string: id)
+                }
 			}
 			let status = collection.save(document: bson)
 			if "\(status)" != "success" {
@@ -153,6 +160,9 @@ open class MongoDBStORM: StORM, StORMProtocol {
 		client.close()
 	}
 
+    public func newObjectId() -> String {
+        return BSON.OID.newObjectId()
+    }
 
 	public func newUUID() -> String {
 		let x = asUUID()

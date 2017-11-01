@@ -1,7 +1,7 @@
 import XCTest
 import PerfectLib
 import StORM
-import MongoDB
+import PerfectMongoDB
 import SwiftRandom
 @testable import MongoDBStORM
 
@@ -68,72 +68,98 @@ class MongoDBStORMTests: XCTestCase {
 	Save - New
 	============================================================================================= */
 	func testSaveNewWithID() {
-		let obj = User()
-		obj.id = obj.newUUID()
-		obj.firstname = "ID was specified"
-		obj.lastname = "Y"
-
-		do {
-			try obj.save()
-		} catch {
-			XCTFail("\(error)")
-		}
+        
+        let first = User()
+        first.id = first.newUUID()
+        
+        let second = User()
+        second.id = second.newObjectId()
+        
+        let objects = [first, second]
+        
+        for obj in objects {
+            obj.firstname = "ID was specified"
+            obj.lastname = "Y"
+            
+            do {
+                try obj.save()
+            } catch {
+                XCTFail("\(error)")
+            }
+        }
 	}
-	
 
 	/* =============================================================================================
 	Save - Update
 	============================================================================================= */
 	func testSaveUpdate() {
-		let obj = User()
-		obj.id = obj.newUUID()
-		obj.firstname = "X for update"
-		obj.lastname = "Y"
-
-		do {
-			try obj.save()
-			print("new id is: \(obj.id)")
-		} catch {
-			XCTFail("\(error)")
-		}
-
-		obj.firstname = "A updated"
-		obj.lastname = "B"
-		do {
-			try obj.save()
-			print("update, id is: \(obj.id)")
-		} catch {
-			XCTFail("\(error)")
-		}
-		print(obj.errorMsg)
-		XCTAssert(!obj.id.isEmpty, "Object not saved (update)")
+        
+        let first = User()
+        first.id = first.newUUID()
+        
+        let second = User()
+        second.id = second.newObjectId()
+        
+        let objects = [first, second]
+        
+        for obj in objects {
+            obj.firstname = "X for update"
+            obj.lastname = "Y"
+            
+            do {
+                try obj.save()
+                print("new id is: \(obj.id)")
+            } catch {
+                XCTFail("\(error)")
+            }
+            
+            obj.firstname = "A updated"
+            obj.lastname = "B"
+            do {
+                try obj.save()
+                print("update, id is: \(obj.id)")
+            } catch {
+                XCTFail("\(error)")
+            }
+            print(obj.errorMsg)
+            XCTAssert(!obj.id.isEmpty, "Object not saved (update)")
+        }
 	}
 
 	/* =============================================================================================
 	Get (with id)
 	============================================================================================= */
 	func testGetByPassingID() {
-		let obj = User()
-		obj.id = obj.newUUID()
-		obj.firstname = "X"
-		obj.lastname = "Y"
-
-		do {
-			try obj.save()
-		} catch {
-			XCTFail("\(error)")
-		}
-
-		let obj2 = User()
-
-		do {
-			try obj2.get(obj.id)
-		} catch {
-			XCTFail("\(error)")
-		}
-		XCTAssert(obj.id == obj2.id, "Object not the same (id)")
-		XCTAssert(obj.firstname == obj2.firstname, "Object not the same (firstname)")
-		XCTAssert(obj.lastname == obj2.lastname, "Object not the same (lastname)")
+        
+        let first = User()
+        first.id = first.newUUID()
+        
+        let second = User()
+        second.id = second.newObjectId()
+        
+        let objects = [first, second]
+        
+        for obj in objects {
+            obj.firstname = "X"
+            obj.lastname = "Y"
+            
+            do {
+                try obj.save()
+            } catch {
+                XCTFail("\(error)")
+            }
+            
+            let obj2 = User()
+            
+            do {
+                try obj2.get(obj.id)
+            } catch {
+                XCTFail("\(error)")
+            }
+            XCTAssert(obj.id == obj2.id, "Object not the same (id)")
+            XCTAssert(obj.firstname == obj2.firstname, "Object not the same (firstname)")
+            XCTAssert(obj.lastname == obj2.lastname, "Object not the same (lastname)")
+        }
 	}
 
 	/* =============================================================================================
