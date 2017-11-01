@@ -21,11 +21,19 @@ extension MongoDBStORM {
 
 		for i in result {
 			let thisRow = StORMRow()
-			let ii = try? i.asString.jsonDecode()
-			thisRow.data = ii as! Dictionary<String, Any>
+			let ii = try? i.asString.jsonDecode()            
+			thisRow.data = self.normalizedDictionary(from: ii as! Dictionary<String, Any>)
 			resultRows.append(thisRow)
 		}
 		
 		return resultRows
 	}
+    
+    func normalizedDictionary(from: Dictionary<String, Any>) -> Dictionary<String, Any> {
+        var result = from
+        if let id = result["_id"] as? [String:String], let oid = id["$oid"] {
+            result["_id"] = oid
+        }
+        return result
+    }
 }

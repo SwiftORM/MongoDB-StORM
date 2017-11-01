@@ -43,7 +43,11 @@ extension MongoDBStORM {
 			let (collection, client) = try setupCollection()
 
 			let query = BSON()
-			query.append(key: "_id", string: id)
+            if BSON.OID.isValidObjectId(id) {
+                query.append(oid: BSON.OID(id))
+            } else {
+                query.append(key: "_id", string: id)
+            }
 
 			let cursor = collection.find(
 				query: query,
