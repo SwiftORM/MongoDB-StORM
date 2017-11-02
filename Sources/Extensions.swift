@@ -8,33 +8,19 @@
 import Foundation
 import PerfectMongoDB
 
+
 extension BSON.OID
 {
     static func isValidObjectId(_ string: String) -> Bool {
         
-        #if os(Linux)
-            let lengthCondition = string.characters.count == 24
-        #else
-            let lengthCondition = string.count == 24
-        #endif
-        guard lengthCondition else {
-            return false
+        if let expression = try? NSRegularExpression(pattern: "[0-9a-f]{24}", options: []) {
+            #if os(Linux)
+                let range = NSMakeRange(0, string.characters.count)
+            #else
+                let range = NSMakeRange(0, string.count)
+            #endif
+            return expression.numberOfMatches(in: string, options: [], range: range) == 1
         }
-        
-        let allowed: [Character] = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
-        
-        #if os(Linux)
-            let collection = string.characters
-        #else
-            let collection = string
-        #endif
-        
-        for character in collection {
-            guard allowed.contains(character) else {
-                return false
-            }
-        }
-        
-        return true
+        return false
     }
 }
