@@ -273,6 +273,32 @@ class MongoDBStORMTests: XCTestCase {
 	}
 
 
+    func testObjectIdValidation() {
+        let validObjectIds = [
+            "59f891ac0e342a5daf074dc8",
+            "123123123123123123123123",
+            "aaaaaaaaaaaaaaaaaaaaaaaa",
+            "000000000000000000000000"
+        ]
+        
+        for validObjectId in validObjectIds {
+            XCTAssertTrue(BSON.OID.isValidObjectId(validObjectId) == true, "")
+        }
+        
+        let invalidObjectIds = [
+            "59f891ac0e342a5daf074dc859f891ac0e342a5daf074dc8",
+            "59f891ac0e342a5daf074dc",
+            "59r891rr0e342a5daf074dc8",
+            "59f891ac0e342a5daf074dc8".uppercased(),
+            "Abracadabra",
+            "1234546",
+            ""
+        ]
+        
+        for invalidObjectId in invalidObjectIds {
+            XCTAssertTrue(BSON.OID.isValidObjectId(invalidObjectId) == false, "")
+        }
+    }
 
 
 
@@ -287,7 +313,8 @@ class MongoDBStORMTests: XCTestCase {
 			("testDelete", testDelete),
 			("testFind", testFindZero),
 			("testFind", testFind),
-			("testFindAll", testFindAll)
+			("testFindAll", testFindAll),
+            ("testObjectIdValidation", testObjectIdValidation)
 		]
 	}
 
