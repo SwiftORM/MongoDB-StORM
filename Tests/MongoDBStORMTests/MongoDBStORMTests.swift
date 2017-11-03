@@ -372,7 +372,9 @@ class MongoDBStORMTests: XCTestCase {
 			("testFind", testFindZero),
 			("testFind", testFind),
 			("testFindAll", testFindAll),
-            ("testObjectIdValidation", testObjectIdValidation)
+            ("testObjectIdValidation", testObjectIdValidation),
+            ("testArrayData", testArrayData),
+            ("testDictionaryData", testDictionaryData)
 		]
 	}
 
