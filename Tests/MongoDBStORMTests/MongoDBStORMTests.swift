@@ -208,22 +208,34 @@ class MongoDBStORMTests: XCTestCase {
 	DELETE
 	============================================================================================= */
 	func testDelete() {
-		let obj = User()
-		let rand = Randoms.randomAlphaNumericString(length: 12)
-		do {
-			obj.id			= rand
-			obj.firstname	= "Mister"
-			obj.lastname	= "PotatoHead"
-			obj.email		= "potato@example.com"
-			try obj.save()
-		} catch {
-			XCTFail("\(error)")
-		}
-		do {
-			try obj.delete()
-		} catch {
-			XCTFail("\(error)")
-		}
+        
+        let ids = [BSON.OID.newObjectId(), Randoms.randomAlphaNumericString(length: 12)]
+        
+        for id in ids {
+            let obj = User()
+            do {
+                obj.id            = id
+                obj.firstname    = "Mister"
+                obj.lastname    = "PotatoHead"
+                obj.email        = "potato@example.com"
+                try obj.save()
+            } catch {
+                XCTFail("\(error)")
+            }
+            do {
+                try obj.delete()
+            } catch {
+                XCTFail("\(error)")
+            }
+            
+            let fetchedObject = User()
+            do {
+                try fetchedObject.get(id)
+                XCTAssertTrue(fetchedObject.results.cursorData.totalRecords == 0, "\(id) still exists")
+            } catch {
+                XCTFail("\(error)")
+            }
+        }
 	}
 
 
