@@ -22,9 +22,16 @@ extension MongoDBStORM {
 				self.error = StORMError.error("No id specified.")
 				throw error
 			}
+            
 			let (collection, client) = try setupCollection()
 			let query = BSON()
-			query.append(key: "_id", string: idval as! String)
+            let id = "\(idval)"
+            if BSON.OID.isValidObjectId(id) {
+                let oid = BSON.OID(id)
+                query.append(oid: oid)
+            } else {
+                query.append(key: "_id", string: id)
+            }
 			let status = collection.remove(selector: query)
 			if "\(status)" != "success" {
 				LogFile.critical("MongoDB Delete error \(status)")

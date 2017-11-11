@@ -98,6 +98,36 @@ open class MongoDBStORM: StORM, StORMProtocol {
 		}
 	}
 
+    /// Returns a [(String,Any)] object representation of the current object.
+    /// If any object property begins with an underscore, or with "internal_" it is omitted from the response.
+    override open func asData(_ offset: Int = 0) -> [(String, Any)] {
+        var c = [(String, Any)]()
+        var count = 0
+        let mirror = Mirror(reflecting: self)
+        for case let (label?, value) in mirror.children {
+            if count >= offset && !label.hasPrefix("internal_") && !label.hasPrefix("_") {
+                c.append((label, modifyValue(value, forKey: label)))
+            }
+            count += 1
+        }
+        return c
+    }
+    
+    /// Returns a [String:Any] object representation of the current object.
+    /// If any object property begins with an underscore, or with "internal_" it is omitted from the response.
+    override open func asDataDict(_ offset: Int = 0) -> [String: Any] {
+        var c = [String: Any]()
+        var count = 0
+        let mirror = Mirror(reflecting: self)
+        for case let (label?, value) in mirror.children {
+            if count >= offset && !label.hasPrefix("internal_") && !label.hasPrefix("_") {
+                c[label] = modifyValue(value, forKey: label)
+            }
+            count += 1
+        }
+        return c
+    }
+    
 	/// Generic "to" function
 	/// Defined as "open" as it is meant to be overridden by the child class.
 	///

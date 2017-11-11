@@ -13,7 +13,9 @@ class User: MongoDBStORM {
 	var firstname		: String = ""
 	var lastname		: String = ""
 	var email			: String = ""
-
+    var pseudonyms      : [String] = [String]()
+    var data            : [String: String] = [String: String]()
+    
 	override init() {
 		super.init()
 		_collection = "users"
@@ -24,6 +26,8 @@ class User: MongoDBStORM {
 		firstname		= this.data["firstname"] as? String ?? ""
 		lastname		= this.data["lastname"] as? String ?? ""
 		email			= this.data["email"] as? String ?? ""
+        pseudonyms      = this.data["pseudonyms"] as? [String] ?? [String]()
+        data            = this.data["data"] as? [String: String] ?? [String: String]()
 	}
 
 	func rows() -> [User] {
@@ -204,22 +208,34 @@ class MongoDBStORMTests: XCTestCase {
 	DELETE
 	============================================================================================= */
 	func testDelete() {
-		let obj = User()
-		let rand = Randoms.randomAlphaNumericString(length: 12)
-		do {
-			obj.id			= rand
-			obj.firstname	= "Mister"
-			obj.lastname	= "PotatoHead"
-			obj.email		= "potato@example.com"
-			try obj.save()
-		} catch {
-			XCTFail("\(error)")
-		}
-		do {
-			try obj.delete()
-		} catch {
-			XCTFail("\(error)")
-		}
+        
+        let ids = [BSON.OID.newObjectId(), Randoms.randomAlphaNumericString(length: 12)]
+        
+        for id in ids {
+            let obj = User()
+            do {
+                obj.id            = id
+                obj.firstname    = "Mister"
+                obj.lastname    = "PotatoHead"
+                obj.email        = "potato@example.com"
+                try obj.save()
+            } catch {
+                XCTFail("\(error)")
+            }
+            do {
+                try obj.delete()
+            } catch {
+                XCTFail("\(error)")
+            }
+            
+            let fetchedObject = User()
+            do {
+                try fetchedObject.get(id)
+                XCTAssertTrue(fetchedObject.results.cursorData.totalRecords == 0, "\(id) still exists")
+            } catch {
+                XCTFail("\(error)")
+            }
+        }
 	}
 
 
@@ -301,7 +317,61 @@ class MongoDBStORMTests: XCTestCase {
     }
 
 
+    func testArrayData() {
+        let obj = User()
+        
+        let pseudonyms = ["Santa", "SantaClaus", "SC", "Potato", "Not Potato", "What else?"]
+        let id = obj.newObjectId()
+        
+        obj.id = id
+        obj.pseudonyms = pseudonyms
+        do {
+            try obj.save()
+        } catch {
+            XCTFail("Save error: \(obj.error.string())")
+        }
+        
+        let fetched = User()
+        fetched.id = id
+        do {
+            try fetched.get()
+        } catch {
+            XCTFail("Find error: \(obj.error.string())")
+        }
+        
+        XCTAssertTrue(fetched.pseudonyms == pseudonyms, "Fetched data is not equal to saved")
+    }
 
+    func testDictionaryData()
+    {
+        let obj = User()
+        
+        let data = [            
+            "Foo": "Bar",
+            "True": "False",
+            "Yellow": "Potato"
+        ]
+        let id = obj.newObjectId()
+        
+        obj.id = id
+        obj.data = data
+        do {
+            try obj.save()
+        } catch {
+            XCTFail("Save error: \(obj.error.string())")
+        }
+        
+        let fetched = User()
+        fetched.id = id
+        do {
+            try fetched.get()
+        } catch {
+            XCTFail("Find error: \(obj.error.string())")
+        }
+        
+        XCTAssertTrue(fetched.data == data, "Fetched data is not equal to saved")
+    }
+    
 	static var allTests : [(String, (MongoDBStORMTests) -> () throws -> Void)] {
 		return [
 			("testSaveNew", testSaveNew),
@@ -314,7 +384,9 @@ class MongoDBStORMTests: XCTestCase {
 			("testFind", testFindZero),
 			("testFind", testFind),
 			("testFindAll", testFindAll),
-            ("testObjectIdValidation", testObjectIdValidation)
+            ("testObjectIdValidation", testObjectIdValidation),
+            ("testArrayData", testArrayData),
+            ("testDictionaryData", testDictionaryData)
 		]
 	}
 
