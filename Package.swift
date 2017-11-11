@@ -1,5 +1,5 @@
 // Generated automatically by Perfect Assistant Application
-// Date: 2017-10-03 18:46:48 +0000
+// Date: 2017-11-01 18:12:34 +0000
 import PackageDescription
 let package = Package(
 	name: "MongoDBStORM",

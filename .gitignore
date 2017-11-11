@@ -73,3 +73,6 @@ buildlinux
 Package.swift.orig
 Package.resolved
 PADockerfile_build
+.package_lin.pins
+.package_lin.resolved
+Package.pins
