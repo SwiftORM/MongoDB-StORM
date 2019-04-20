@@ -9,5 +9,15 @@ let package = Package(
 		.package(url: "https://github.com/iamjono/SwiftRandom.git", from: "1.0.0"),
 		.package(url: "https://github.com/PerfectlySoft/Perfect-MongoDB.git", from: "3.0.0"),
 	],
-	targets: []
+	targets: [
+		.target(
+			name: "MongoDBStORM",
+			dependencies: [
+				"StORM",
+				"PerfectLogger",
+				"SwiftRandom",
+				"PerfectMongoDB"
+			]
+		)
+	]
 )
