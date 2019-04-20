@@ -1,5 +1,5 @@
-// Generated automatically by Perfect Assistant Application
-// Date: 2017-11-01 18:12:34 +0000
+// swift-tools-version:4.2
+// The swift-tools-version declares the minimum version of Swift required to build this package.
 import PackageDescription
 let package = Package(
 	name: "MongoDBStORM",
