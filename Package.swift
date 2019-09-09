@@ -1,13 +1,26 @@
-// Generated automatically by Perfect Assistant Application
-// Date: 2017-11-01 18:12:34 +0000
+// swift-tools-version:4.2
+// The swift-tools-version declares the minimum version of Swift required to build this package.
 import PackageDescription
 let package = Package(
 	name: "MongoDBStORM",
-	targets: [],
+	products: [
+		.library(name: "MongoDBStORM", targets: ["MongoDBStORM"])
+	],
 	dependencies: [
-		.Package(url: "https://github.com/SwiftORM/StORM.git", majorVersion: 3),
-		.Package(url: "https://github.com/PerfectlySoft/Perfect-Logger.git", majorVersion: 3),
-		.Package(url: "https://github.com/iamjono/SwiftRandom.git", majorVersion: 0),
-		.Package(url: "https://github.com/PerfectlySoft/Perfect-MongoDB.git", majorVersion: 3),
+		.package(url: "https://github.com/SwiftORM/StORM.git", from: "3.0.0"),
+		.package(url: "https://github.com/PerfectlySoft/Perfect-Logger.git", from: "3.0.0"),
+		.package(url: "https://github.com/iamjono/SwiftRandom.git", from: "1.0.0"),
+		.package(url: "https://github.com/PerfectlySoft/Perfect-MongoDB.git", from: "3.0.0"),
+	],
+	targets: [
+		.target(
+			name: "MongoDBStORM",
+			dependencies: [
+				"StORM",
+				"PerfectLogger",
+				"SwiftRandom",
+				"PerfectMongoDB"
+			]
+		)
 	]
 )
